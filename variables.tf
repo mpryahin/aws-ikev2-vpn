@@ -1,12 +1,12 @@
 variable "aws_region" {
-    type =  string
-    description = "The full name of the region to use"
-    default = "eu-central-1"
+  type        = string
+  description = "The full name of the region to use"
+  default     = "eu-central-1"
 }
 
 variable "aws_subnet_name" {
-    description = "The VPN server public subnet name"
-    type =  string
+  description = "The VPN server public subnet name"
+  type        = string
 }
 
 variable "aws_route53_zone_name" {
@@ -39,6 +39,3 @@ variable "vpn_admin_email" {
   description = "An email address to be used by the certbot"
   type        = string
 }
-
-
-
