@@ -6,4 +6,4 @@
 *.tfstate.backup
 *.lock.hcl
 *.terraform
-
+.backend.conf

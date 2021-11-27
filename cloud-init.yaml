@@ -1,0 +1,26 @@
+#cloud-config
+write_files:
+  - content: |
+      #!/bin/bash
+
+      export VPNHOST=${vpn_host}
+      export VPNUSERNAME=${vpn_user_name}
+      export EMAILADDR=${email}
+
+      curl -LO "https://raw.githubusercontent.com/mpryahin/aws-ikev2-vpn/main/ikev2-setup.sh"
+      curl -LO "https://raw.githubusercontent.com/mpryahin/aws-ikev2-vpn/main/ikev2-setup.sha256"
+
+      check=$(echo "$(<ikev2-setup.sha256) ikev2-setup.sh" | sha256sum --check --status)
+      if [[ $check -ne 0 ]]; then
+          echo "Checksum validation failed"
+          exit $check
+      fi
+
+      chmod +x ikev2-setup.sh
+      ./ikev2-setup.sh
+    owner: root:root
+    permissions: "754"
+    path: /root/init.sh
+
+runcmd:
+  - [ bash, /root/init.sh ]
