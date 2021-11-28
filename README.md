@@ -31,7 +31,7 @@ The project creates the following AWS resources:
 - A DNS record.
 
 The EC2 Instance is initialised with a user-data script that pulls the main installation script via https protocol from this repository. To make sure the installation script is not malformed while in transit the user data-script validates it against the checksum that is passed as a terraform input variable.
-The setup script employs [Strongswan](https://www.strongswan.org/) the open source IPsec-based VPN server, and is based on the [GitHub - jawj/IKEv2-setup](https://github.com/jawj/IKEv2-setup) project with subtle modifications to suit a non-interactive installation mode and to support AWS DNS configuration.
+The setup script employs [Strongswan](https://www.strongswan.org/) the open source IPsec-based VPN server and is based on the [GitHub - jawj/IKEv2-setup](https://github.com/jawj/IKEv2-setup) project with subtle modifications to suit a non-interactive installation mode and to support AWS DNS configuration.
 
 ## Installation
 
@@ -53,7 +53,7 @@ Apply the terraform configuration
 terraform apply -auto-approve
 ```
 
-Download a VPN client config files when setup script is finished. (These files become available only after the Terraform configuration has been provisioned, usually take a few minutes)
+Download a VPN client config files when setup script is finished. (These files become available only after the Terraform configuration has been provisioned, usually it takes a few minutes)
 
 iOS/macOS:
 
