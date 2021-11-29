@@ -13,7 +13,7 @@ resource "aws_instance" "vpn_server" {
   instance_type               = var.aws_instance_type
   associate_public_ip_address = true
   vpc_security_group_ids      = [aws_security_group.private_vpn.id]
-  key_name                    = var.aws_instance_ssh_key_name
+  key_name                    = aws_key_pair.main.key_name
   user_data = templatefile("cloud-init.yaml", {
     vpn_host : var.vpn_server_domain_name,
     vpn_user_name : var.vpn_user_name,
@@ -31,4 +31,9 @@ resource "aws_instance" "vpn_server" {
   }
 
   depends_on = [aws_route53_record.vpn_server]
+}
+
+resource "aws_key_pair" "main" {
+  key_name   = "aws-main"
+  public_key = var.aws_rsa_pub
 }

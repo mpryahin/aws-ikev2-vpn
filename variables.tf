@@ -25,8 +25,8 @@ variable "aws_instance_type" {
   default     = "t3.nano"
 }
 
-variable "aws_instance_ssh_key_name" {
-  description = "Key name of the Key Pair to use for the instance"
+variable "aws_rsa_pub" {
+  description = "key pair's public key to be registered with AWS to allow logging-in to EC2 instances"
   type        = string
 }
 
