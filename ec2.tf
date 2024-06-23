@@ -4,7 +4,7 @@ data "aws_ami" "ubuntu" {
   most_recent = true
   filter {
     name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
+    values = ["ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-arm64-server-"]
   }
 }
 
@@ -23,7 +23,7 @@ resource "aws_instance" "vpn_server" {
   root_block_device {
     delete_on_termination = true
     volume_size           = 8
-    volume_type           = "standard"
+    volume_type           = "gp3"
   }
 
   tags = {

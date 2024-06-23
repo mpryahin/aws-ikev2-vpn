@@ -1,7 +1,7 @@
 variable "aws_region" {
   type        = string
   description = "The full name of the region to use"
-  default     = "eu-central-1"
+  default     = "eu-west-2"
 }
 
 variable "aws_subnet_name" {
@@ -22,7 +22,7 @@ variable "vpn_server_domain_name" {
 variable "aws_instance_type" {
   description = "VPN server instance type"
   type        = string
-  default     = "t3.nano"
+  default     = "t4g.nano"
 }
 
 variable "aws_rsa_pub" {
