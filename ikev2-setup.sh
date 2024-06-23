@@ -9,7 +9,7 @@ function exit_badly {
   exit 1
 }
 
-[[ $(lsb_release -rs) == "18.04" ]] || [[ $(lsb_release -rs) == "20.04" ]] || exit_badly "This script is for Ubuntu 20.04 or 18.04 only: aborting (if you know what you're doing, try deleting this check)"
+[[ $(lsb_release -rs) == "18.04" ]] || [[ $(lsb_release -rs) == "24.04" ]] || exit_badly "This script is for Ubuntu 20.04 or 18.04 only: aborting (if you know what you're doing, try deleting this check)"
 [[ $(id -u) -eq 0 ]] || exit_badly "Please re-run as root (e.g. sudo ./path/to/this/script)"
 
 echo "--- Adding repositories and installing utilities ---"
@@ -21,9 +21,9 @@ export DEBIAN_FRONTEND=noninteractive
 # note: software-properties-common is required for add-apt-repository
 apt-get -o Acquire::ForceIPv4=true update
 apt-get -o Acquire::ForceIPv4=true install -y software-properties-common
-add-apt-repository universe
-add-apt-repository restricted
-add-apt-repository multiverse
+add-apt-repository universe -y
+add-apt-repository restricted -y
+add-apt-repository multiverse -y
 
 apt-get -o Acquire::ForceIPv4=true install -y moreutils dnsutils
 
@@ -86,7 +86,13 @@ apt autoremove -y
 debconf-set-selections <<< "postfix postfix/mailname string ${VPNHOST}"
 debconf-set-selections <<< "postfix postfix/main_mailer_type string 'Internet Site'"
 
-apt-get -o Acquire::ForceIPv4=true install -y language-pack-en strongswan libstrongswan-standard-plugins strongswan-libcharon libcharon-standard-plugins libcharon-extra-plugins  iptables-persistent postfix mutt unattended-upgrades certbot uuid-runtime
+apt-get -o Acquire::ForceIPv4=true install -y \
+  language-pack-en iptables-persistent postfix mutt unattended-upgrades certbot uuid-runtime \
+  strongswan libstrongswan-standard-plugins strongswan-libcharon libcharon-extra-plugins
+
+# in 22.04 libcharon-standard-plugins is replaced with libcharon-extauth-plugins
+apt-get -o Acquire::ForceIPv4=true install -y libcharon-standard-plugins \
+  || apt-get -o Acquire::ForceIPv4=true install -y libcharon-extauth-plugins
 
 echo
 echo "--- Configuring firewall ---"
@@ -210,7 +216,7 @@ conn roadwarrior
   fragmentation=yes
   forceencaps=yes
   # CNSA/RFC 6379 Suite B (https://wiki.strongswan.org/projects/strongswan/wiki/IKEv2CipherSuites)
-  ike=aes256gcm16-prfsha384-ecp384!
+  ike=aes256gcm16-prfsha384-ecp384,aes256gcm16-prfsha256-ecp256!
   esp=aes256gcm16-ecp384!
   dpdaction=clear
   dpddelay=900s
@@ -229,7 +235,7 @@ conn roadwarrior
   rightsendcert=never
 " > /etc/ipsec.conf
 
-echo "${VPNHOST} : RSA \"privkey.pem\"
+echo "${VPNHOST} : ECDSA \"privkey.pem\"
 ${VPNUSERNAME} : EAP \"${VPNPASSWORD}\"
 " > /etc/ipsec.secrets
 

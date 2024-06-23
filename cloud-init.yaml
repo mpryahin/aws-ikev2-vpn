@@ -10,10 +10,11 @@ write_files:
       curl -LO "https://raw.githubusercontent.com/mpryahin/aws-ikev2-vpn/main/ikev2-setup.sh"
       curl -LO "https://raw.githubusercontent.com/mpryahin/aws-ikev2-vpn/main/ikev2-setup.sha256"
 
-      check=$(echo "$(<ikev2-setup.sha256) ikev2-setup.sh" | sha256sum --check --status)
-      if [[ $check -ne 0 ]]; then
-          echo "Checksum validation failed"
-          exit $check
+      if sha256sum --check ikev2-setup.sha256; then
+        echo "Checksum verification passed."
+      else
+        echo "Checksum verification failed."
+        exit 1
       fi
 
       chmod +x ikev2-setup.sh
